@@ -15,17 +15,21 @@ if __name__ == "__main__":
     output_text_file_path = output_path_dir + "/output.txt"
 
 
-    for index in range(1,6):
+    for index in range(5,6):
         image = cv.imread("../images/images/five_people" + "/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
-        #Image.fromarray(image.astype(np.uint8)).show()
+        Image.fromarray(image.astype(np.uint8)).show()
         person_full = get_rgb_histogram(image)
         person_half = get_rgb_histogram(image_half)
 
     
-        for image_name in images[:]:
-            print("image")
+        #750 - second person
+        #25 - first person
+        #0 - third person
+        #20 - fourth person
+        for image_name in images[20:]:
+            #print("image")
             # Charger le modèle et appliquer les transformations à l'image
             seg_model, transforms = model.get_model()
 
@@ -54,7 +58,7 @@ if __name__ == "__main__":
                 
                 # Add a separator for clarity between different images
                 text_file.write("\n\n")
-            masked = apply_saved_mask(image, 3000)
+            masked = apply_saved_mask(image, 1000)
             result = masked[0]
             result_half = masked[1]
             
