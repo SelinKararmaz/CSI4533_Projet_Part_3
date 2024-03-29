@@ -15,7 +15,7 @@ if __name__ == "__main__":
     output_text_file_path = output_path_dir + "/output.txt"
 
 
-    for index in range(5,6):
+    for index in range(1,6):
         image = cv.imread("../images/images/five_people" + "/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         #25 - first person
         #0 - third person
         #20 - fourth person
-        for image_name in images[20:]:
+        for image_name in images[:]:
             #print("image")
             # Charger le modèle et appliquer les transformations à l'image
             seg_model, transforms = model.get_model()
