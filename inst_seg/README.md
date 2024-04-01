@@ -1,50 +1,38 @@
 
 # Instance Segmentation
 
-Ce projet a été testé avec Python 3.10.
+This project was tested with Python 3.10.
 
-## Pour Commencer
+## Instructions
 
-Suivez ces étapes simples pour obtenir une copie locale en fonctionnement.
+Follow these simple steps to get your local copy up and running.
 
-### Prérequis
-
-Ce projet utilise GIT pour le contrôle de version. Assurez-vous que GIT est installé sur votre ordinateur. Pour les instructions d'installation, visitez :
-
-[https://git-scm.com/book/fr/v2/Démarrage-rapide-Installation-de-Git](https://git-scm.com/book/fr/v2/Démarrage-rapide-Installation-de-Git)
-
-### Installation
-
-1. Dans le Terminal ou le CommandLine, clonez le dépôt
-   ```
-   git clone https://gitlab.com/zatoitche/inst_seg.git
-   ```
-
-2. Téléchargez le fichier `images.zip` pour la deuxième partie de votre laboratoire depuis le lien suivant :
+1. Download the folder `images.zip` from the google drive link below:
    ```
    https://drive.google.com/file/d/1potC4tmKjvLAlXSmhaGH59u-g5u4qg5-/view?usp=sharing
    ```
 
-3. Extrayez `images.zip` et placez le dossier "images" extrait dans le répertoire du projet que vous avez précédemment cloné.
+2. Extract `images.zip` and place it in the root directory of the repository.
 
-4. Dans le Terminal ou le CommandLine, naviguez vers votre répertoire de projet.
+3. Open a command line on the root directory.
 
-5. Créez un environnement virtuel nommé "env" en utilisant la commande suivante :
+4. Create a virtual environment
    ```
    python3 -m venv env
    ```
 
-6. Activez l'environnement virtuel avec :
+5. Activate the virtual environment
    ```
    source env/bin/activate
    ```
 
-7. Installez les dépendances du code avec :
+6. Install code dependencies
    ```
    pip install -r requirements.txt
    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
    ```
+7. Create a folder `five_people` in the `images\images` folder and place input images of the 5 people in `images\images\five_people` folder
 
 ## Utilisation
 
-Vous êtes maintenant prêt à exécuter le code. Le fichier `main.py` contient un exemple de code pour effectuer la segmentation d'instance sur des personnes dans une image. Le code cible les images dans le dossier "examples", traitant les images de "examples/source" et les plaçant dans "examples/output" pour vos tests. Vous pouvez modifier le code pour traiter les images du dossier "images" pour votre projet.
+Run the code with `python main.py`
