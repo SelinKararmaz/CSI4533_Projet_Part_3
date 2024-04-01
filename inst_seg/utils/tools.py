@@ -28,7 +28,7 @@ def process_inference(model_output, image):
                 img_np[:, :, c] = np.where(mask_np, 
                                         (ALPHA * MASK_COLOR[c] + (1 - ALPHA) * img_np[:, :, c]),
                                         img_np[:, :, c])
-    ## (Optional) save mask
+    # save mask to text file
     with open('examples/output/saved_masks.npy', 'wb') as f:
         np.save(f,np_masks)
 
@@ -37,39 +37,45 @@ def process_inference(model_output, image):
 
 def apply_saved_mask(image, threshold):
 
-    # Convertir l'image en tableau numpy
+    # Load mask from numpy file and apply
     img_np = np.array(image)
     masks = np.load('examples/output/saved_masks.npy')
     people = []
     people_half = []
+    
     # Parcourir chaque prédiction pour appliquer le seuil et le label
     for i, mask in enumerate(masks):  
+        
+        # Only keep masks above the threshold
         if(np.count_nonzero(mask)< threshold): continue
-        #print(np.count_nonzero(mask))
+       
+       # create an empty array to store the result
         masked_region = np.zeros((*img_np.shape[:2], 4), dtype=np.uint8)
 
-        # Apply the mask to the original image to retain the colored region
+        # Apply the mask to the original image to retain the red mask colored region
+        # this creates an image of a person only, with the background being black
         for c in range(3):
             masked_region[:, :, c] = np.where(mask, img_np[:, :, c], 0)
 
-        # Set the alpha channel based on the mask
+        # Set the alpha channel of the resulting mask to be transparent where the mask is 0 (multiplies mask by image)
+        # this creates image of the person, with the background being transparent
         masked_region[:, :, 3] = (mask * 255).astype(np.uint8)
         
+        # Calculate bounding box of mask
         non_zero_indices = np.argwhere(mask)
         min_row, min_col = np.min(non_zero_indices, axis=0)
         max_row, max_col = np.max(non_zero_indices, axis=0)
         
         # Calculate the midpoint of the bounding box
         mid_row = (min_row + max_row) // 2
+        
         # Get the top half of the masked region
         cropped_mask = masked_region[min_row:mid_row, :, :]
 
         # Append the masked image to the list
         people.append(masked_region)
         people_half.append(cropped_mask)
-
-    
-    # Convertir en image à partir d'un tableau numpy et le renvoyer            
+      
     return people,people_half
 
 

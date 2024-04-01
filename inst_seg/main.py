@@ -20,12 +20,12 @@ if __name__ == "__main__":
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
         #Image.fromarray(image.astype(np.uint8)).show()
+        
         person_full = get_rgb_histogram(image)
         person_half = get_rgb_histogram(image_half)
 
-    
         for image_name in images[:]:
-            print("image")
+            
             # Charger le modèle et appliquer les transformations à l'image
             seg_model, transforms = model.get_model()
 
@@ -45,15 +45,6 @@ if __name__ == "__main__":
             masks = process_inference(output,image)[1]
             result_str = str(masks)
 
-            with open(output_text_file_path, "w") as text_file:
-                # Write the image name before writing the result
-                text_file.write("Image Name: {}\n".format(image_name))
-                
-                # Write the result to the text file
-                text_file.write(result_str)
-                
-                # Add a separator for clarity between different images
-                text_file.write("\n\n")
             masked = apply_saved_mask(image, 3000)
             result = masked[0]
             result_half = masked[1]
