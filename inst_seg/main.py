@@ -9,21 +9,20 @@ import torch
 if __name__ == "__main__":
 
     # Définir les répertoires source et de sortie, et le nom de l'image
-    source_path_dir = "../images/images/cam0"
+    source_path_dir = "images/images/cam0"
     output_path_dir = "examples/output"
     images = os.listdir(source_path_dir)
     output_text_file_path = output_path_dir + "/output.txt"
 
 
     for index in range(1,6):
-        image = cv.imread("../images/images/five_people" + "/person_" + str(index) + ".png")
+        image = cv.imread("images/images/five_people" + "/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
         Image.fromarray(image.astype(np.uint8)).show()
         person_full = get_rgb_histogram(image)
         person_half = get_rgb_histogram(image_half)
 
-    
         #750 - second person
         #25 - first person
         #0 - third person
@@ -50,6 +49,7 @@ if __name__ == "__main__":
             
             smallest_dif = -2
             closest_person = 0
+            
             for i in range(len(result)):
                 person_in_image = result[i]
                 person_in_image_half = result_half[i]
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
             bounding_box_image = get_bounding_box(closest_person, image)
             
-            output_folder_path = "../output/person_" + str(index) +"/"+image_name
+            output_folder_path = "output/person_" + str(index) +"/"+image_name
             
             bounding_box_image.save(output_folder_path)
 
