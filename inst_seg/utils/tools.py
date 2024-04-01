@@ -29,17 +29,15 @@ def process_inference(model_output, image):
                                         (ALPHA * MASK_COLOR[c] + (1 - ALPHA) * img_np[:, :, c]),
                                         img_np[:, :, c])
     # save mask to text file
-    with open('examples/output/saved_masks.npy', 'wb') as f:
-        np.save(f,np_masks)
+    result = apply_saved_mask(image,1000,np_masks)
 
     # Convertir en image à partir d'un tableau numpy et le renvoyer            
-    return Image.fromarray(img_np.astype(np.uint8)),masks
+    return result
 
-def apply_saved_mask(image, threshold):
+def apply_saved_mask(image, threshold, masks):
 
     # Load mask from numpy file and apply
     img_np = np.array(image)
-    masks = np.load('examples/output/saved_masks.npy')
     people = []
     people_half = []
     
