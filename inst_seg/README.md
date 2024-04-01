@@ -1,5 +1,5 @@
 
-# Instance Segmentation
+# Instance Segmentation and Histogram Comparison
 
 This project was tested with Python 3.10.
 
