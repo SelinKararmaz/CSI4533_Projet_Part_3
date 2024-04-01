@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
 
     for index in range(1,6):
-        image = cv.imread("images/images/five_people" + "/person_" + str(index) + ".png")
+        image = cv.imread("input/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
         Image.fromarray(image.astype(np.uint8)).show()
