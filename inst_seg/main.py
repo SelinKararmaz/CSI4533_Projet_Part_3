@@ -19,6 +19,7 @@ if __name__ == "__main__":
         image = cv.imread("../images/images/five_people" + "/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
+        
         #Image.fromarray(image.astype(np.uint8)).show()
         
         person_full = get_rgb_histogram(image)
@@ -45,7 +46,8 @@ if __name__ == "__main__":
             masks = process_inference(output,image)[1]
             result_str = str(masks)
 
-            masked = apply_saved_mask(image, 3000)
+            masked = apply_saved_mask(image, 1000)
+
             result = masked[0]
             result_half = masked[1]
             
