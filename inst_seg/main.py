@@ -9,7 +9,7 @@ import torch
 if __name__ == "__main__":
 
     # Définir les répertoires source et de sortie, et le nom de l'image
-    source_path_dir = "images/images/cam0"
+    source_path_dir = "../images/cam0"
     output_path_dir = "examples/output"
     images = os.listdir(source_path_dir)
     output_text_file_path = output_path_dir + "/output.txt"
@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 difference_2 = compare_correlation(person_half,person_in_image_histogram)
                 difference_3 = compare_correlation(person_full,person_in_image_histogram_half)
                 difference_4 = compare_correlation(person_half,person_in_image_histogram_half)
-                
+            
                 local_max = max(difference_1,difference_2,difference_3,difference_4)
                 
                 if(local_max == difference_1 or local_max == difference_2):
@@ -73,10 +73,13 @@ if __name__ == "__main__":
                     if(smallest_dif < local_max):
                         smallest_dif = local_max
                         closest_person = person_in_image
-
+      
+            if(smallest_dif < 0.91): 
+                continue
+        
             bounding_box_image = get_bounding_box(closest_person, image)
             
-            output_folder_path = "output/person_" + str(index) +"/"+image_name
+            output_folder_path = "../output/person_" + str(index) +"/"+image_name
             
             bounding_box_image.save(output_folder_path)
 
