@@ -5,16 +5,13 @@ from utils.histogramCalculator import *
 from utils.tools import *
 import torch
 
-# Point d'entrée principal du script
-if __name__ == "__main__":
 
-    # Définir les répertoires source et de sortie, et le nom de l'image
+    
+def find_people(images, output_text_file_path):
     source_path_dir = "../images/cam0"
     output_path_dir = "examples/output"
     images = os.listdir(source_path_dir)
     output_text_file_path = output_path_dir + "/output.txt"
-
-
     for index in range(1,6):
         image = cv.imread("input/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
@@ -85,5 +82,34 @@ if __name__ == "__main__":
             
             bounding_box_image.save(output_folder_path)
 
-        
+def save_numpy():
+    source_path_dir = "../images/cam0"
+    output_path_dir = "examples/output"
+    images = os.listdir(source_path_dir)
+    output_text_file_path = output_path_dir + "/output.txt"
+    for image_name in images[20:]:
+        seg_model, transforms = model.get_model()
 
+            # Ouvrir l'image et appliquer les transformations
+            
+        image_path = os.path.join(source_path_dir, image_name)
+        image = Image.open(image_path)
+        transformed_img = transforms(image)
+
+            # Effectuer l'inférence sur l'image transformée sans calculer les gradients
+        with torch.no_grad():
+            output = seg_model([transformed_img])
+
+            # Traiter le résultat de l'inférence
+        save_masks(output,image,image_name[:-4])
+           
+                    
+
+# Point d'entrée principal du script
+if __name__ == "__main__":
+
+    # Définir les répertoires source et de sortie, et le nom de l'image
+    save_numpy()
+
+    
+    #find_people(images, output_text_file_path)
