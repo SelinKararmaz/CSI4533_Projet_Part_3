@@ -3,46 +3,19 @@ from utils.config import THRESHOLD, PERSON_LABEL, MASK_COLOR, ALPHA
 from PIL import Image
 import cv2 as cv
 
-# Fonction pour traiter les sorties d'inférence du modèle
-def process_inference(model_output, image):
-    np_masks = []
-    # Extraire les masques, les scores, et les labels de la sortie du modèle
-    masks = model_output[0]['masks']
-    scores = model_output[0]['scores']
-    labels = model_output[0]['labels']
-
-    # Convertir l'image en tableau numpy
-    img_np = np.array(image)
-
-    # Parcourir chaque prédiction pour appliquer le seuil et le label
-    for i, (mask, score, label) in enumerate(zip(masks, scores, labels)):
-    
-        # Appliquer le seuil et vérifier si le label correspond à une personne
-        if score > THRESHOLD and label == PERSON_LABEL:
-            
-            # Convertir le masque en tableau numpy et l'appliquer à l'image            
-            mask_np = mask[0].mul(255).byte().cpu().numpy() > (THRESHOLD * 255) 
-            np_masks.append(mask_np)            
-
-            for c in range(3):
-                img_np[:, :, c] = np.where(mask_np, 
-                                        (ALPHA * MASK_COLOR[c] + (1 - ALPHA) * img_np[:, :, c]),
-                                        img_np[:, :, c])
-    # save mask to text file
-    result = apply_saved_mask(image,1000,np_masks)
-
-    # Convertir en image à partir d'un tableau numpy et le renvoyer            
-    return result
-
-def apply_saved_mask(image, threshold, image_name):
-    masks = np.load('examples/output/'+image_name+'.npy')
+def apply_saved_mask(image, threshold, image_name, cam):
+    """
+    Apply the saved numpy mask to the images
+    The output will be cropped images of be the persons detected in the image
+    """
    
     # Load mask from numpy file and apply
+    masks = np.load(cam + '_npy/'+image_name+'.npy')
     img_np = np.array(image)
     people = []
     people_half = []
     
-    # Parcourir chaque prédiction pour appliquer le seuil et le label
+    # Go through all the masks
     for i, mask in enumerate(masks):  
         
         # Only keep masks above the threshold
@@ -78,8 +51,10 @@ def apply_saved_mask(image, threshold, image_name):
     return people,people_half
 
 
-
 def crop_image_half(image):
+    """
+    Crop the image in half using the height
+    """
     # Get the dimensions of the image
     height, width, channels = image.shape
 
@@ -91,6 +66,10 @@ def crop_image_half(image):
 
 
 def get_bounding_box(mask, image):
+    """
+    Draws the bounding box of the mask on the original image
+    """
+    
     image = np.asarray(image)
     
     # Extract the alpha channel from the mask
@@ -108,12 +87,11 @@ def get_bounding_box(mask, image):
 
     return Image.fromarray(bounding_box_image)
     
-    
 
-
-
-# Fonction pour traiter les sorties d'inférence du modèle
-def save_masks(model_output, image,image_name):
+def save_masks(model_output, image,image_name, cam):
+    """
+    Save the numpy masks that was extracted from the images using CNN to a numpy file
+    """
     np_masks = []
     # Extraire les masques, les scores, et les labels de la sortie du modèle
     masks = model_output[0]['masks']
@@ -137,7 +115,8 @@ def save_masks(model_output, image,image_name):
                 img_np[:, :, c] = np.where(mask_np, 
                                         (ALPHA * MASK_COLOR[c] + (1 - ALPHA) * img_np[:, :, c]),
                                         img_np[:, :, c])
+   
     # save mask to text file
     #result = apply_saved_mask(image,1000,np_masks)
-    with open('examples/output/'+ image_name +'.npy', 'wb') as f:
+    with open(cam + '_npy/'+ image_name +'.npy', 'wb') as f:
         np.save(f,np_masks)

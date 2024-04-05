@@ -5,41 +5,38 @@ from utils.histogramCalculator import *
 from utils.tools import *
 import torch
 
+# cam0 or cam1
+SOURCE_PATH = "images/images/"
 
+def find_people(cam):
+    """
+    Identifies the 5 persons in images
+    Draws bounding box and save the images to output folder
+    """
     
-def find_people():
-    source_path_dir = "../images/cam0"
-    output_path_dir = "examples/output"
+    source_path_dir = SOURCE_PATH + cam
     images = os.listdir(source_path_dir)
-    output_text_file_path = output_path_dir + "/output.txt"
-    for index in range(2,6):
+
+    for index in range(4,5):
         image = cv.imread("input/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
         Image.fromarray(image.astype(np.uint8)).show()
         person_full = get_rgb_histogram(image)
         person_half = get_rgb_histogram(image_half)
+        
+        print("Now identifying person " + str(index))
 
         #750 - second person
         #25 - first person
         #0 - third person
         #20 - fourth person
-        for image_name in images[:]:
-            #print("image")
-            # Charger le modèle et appliquer les transformations à l'image
-            seg_model, transforms = model.get_model()
+        for image_name in images:
 
-            # Ouvrir l'image et appliquer les transformations
-            
             image_path = os.path.join(source_path_dir, image_name)
             image = Image.open(image_path)
-            transformed_img = transforms(image)
-
-            # Effectuer l'inférence sur l'image transformée sans calculer les gradients
-            with torch.no_grad():
-                output = seg_model([transformed_img])
-            
-            masked = apply_saved_mask(image,1000,image_name[:-4])
+     
+            masked = apply_saved_mask(image,1000,image_name[:-4], cam)
             result = masked[0]
             result_half = masked[1]
             
@@ -69,44 +66,58 @@ def find_people():
                     if(smallest_dif < local_max):
                         smallest_dif = local_max
                         closest_person = person_in_image
+                        
             print(smallest_dif)
-            if(smallest_dif < 0.91): 
+            
+            correl_threshold = 0.91
+            
+            if (i == 4):
+                correl_threshold = 0.50
+            
+            if(smallest_dif < correl_threshold): 
                 continue
         
             bounding_box_image = get_bounding_box(closest_person, image)
             
-            output_folder_path = "../output/person_" + str(index) +"/"+image_name
+            output_folder_path = "output/" + cam + "_output/person_" + str(index) +"/"+image_name
             
             bounding_box_image.save(output_folder_path)
+        
+        print("Done identifying person " + str(index))
 
-def save_numpy():
-    source_path_dir = "../images/cam0"
-    output_path_dir = "examples/output"
+def save_numpy(cam):
+    """
+    Runs CNN on all the images to detect persons
+    Return a numpy array for each cam
+    """
+    
+    source_path_dir = SOURCE_PATH + cam
+    
     images = os.listdir(source_path_dir)
-    output_text_file_path = output_path_dir + "/output.txt"
-    for image_name in images[20:]:
-        seg_model, transforms = model.get_model()
 
-            # Ouvrir l'image et appliquer les transformations
-            
+    for image_name in images:
+        seg_model, transforms = model.get_model()
+    
         image_path = os.path.join(source_path_dir, image_name)
         image = Image.open(image_path)
         transformed_img = transforms(image)
 
-            # Effectuer l'inférence sur l'image transformée sans calculer les gradients
         with torch.no_grad():
             output = seg_model([transformed_img])
 
-            # Traiter le résultat de l'inférence
-        save_masks(output,image,image_name[:-4])
+        save_masks(output,image,image_name[:-4], cam)
            
-                    
-
-# Point d'entrée principal du script
+           
 if __name__ == "__main__":
-
-    # Définir les répertoires source et de sortie, et le nom de l'image
-    #save_numpy()
-
     
-    find_people()
+    # save numpy files
+    # save_numpy("cam0")
+    # save_numpy("cam1")
+
+    # Identify people for cam 0
+    print("Processing cam 0")
+    find_people("cam0")
+    
+    # Identify people for cam 1
+    print("Processing cam 1")
+    find_people("cam1")
