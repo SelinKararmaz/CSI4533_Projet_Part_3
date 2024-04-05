@@ -34,8 +34,9 @@ def process_inference(model_output, image):
     # Convertir en image à partir d'un tableau numpy et le renvoyer            
     return result
 
-def apply_saved_mask(image, threshold, masks):
-
+def apply_saved_mask(image, threshold, image_name):
+    masks = np.load('examples/output/'+image_name+'.npy')
+   
     # Load mask from numpy file and apply
     img_np = np.array(image)
     people = []
@@ -107,3 +108,36 @@ def get_bounding_box(mask, image):
 
     return Image.fromarray(bounding_box_image)
     
+    
+
+
+
+# Fonction pour traiter les sorties d'inférence du modèle
+def save_masks(model_output, image,image_name):
+    np_masks = []
+    # Extraire les masques, les scores, et les labels de la sortie du modèle
+    masks = model_output[0]['masks']
+    scores = model_output[0]['scores']
+    labels = model_output[0]['labels']
+
+    # Convertir l'image en tableau numpy
+    img_np = np.array(image)
+
+    # Parcourir chaque prédiction pour appliquer le seuil et le label
+    for i, (mask, score, label) in enumerate(zip(masks, scores, labels)):
+    
+        # Appliquer le seuil et vérifier si le label correspond à une personne
+        if score > THRESHOLD and label == PERSON_LABEL:
+            
+            # Convertir le masque en tableau numpy et l'appliquer à l'image            
+            mask_np = mask[0].mul(255).byte().cpu().numpy() > (THRESHOLD * 255) 
+            np_masks.append(mask_np)            
+
+            for c in range(3):
+                img_np[:, :, c] = np.where(mask_np, 
+                                        (ALPHA * MASK_COLOR[c] + (1 - ALPHA) * img_np[:, :, c]),
+                                        img_np[:, :, c])
+    # save mask to text file
+    #result = apply_saved_mask(image,1000,np_masks)
+    with open('examples/output/'+ image_name +'.npy', 'wb') as f:
+        np.save(f,np_masks)

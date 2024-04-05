@@ -33,6 +33,7 @@ if __name__ == "__main__":
             seg_model, transforms = model.get_model()
 
             # Ouvrir l'image et appliquer les transformations
+            
             image_path = os.path.join(source_path_dir, image_name)
             image = Image.open(image_path)
             transformed_img = transforms(image)
@@ -42,8 +43,9 @@ if __name__ == "__main__":
                 output = seg_model([transformed_img])
 
             # Traiter le résultat de l'inférence
+           # save_masks(output,image,image_name[:-4])
             
-            masked = process_inference(output,image)
+            masked = apply_saved_mask(image,1000,image_name[:-4])
             result = masked[0]
             result_half = masked[1]
             
