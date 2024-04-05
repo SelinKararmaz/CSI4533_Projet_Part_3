@@ -31,8 +31,8 @@ Follow these simple steps to get your local copy up and running.
    pip install -r requirements.txt
    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
    ```
-7. Create a folder `output` in the root directory, and create 5 folders in it, named `person_1`, `person_2`, `person_3`, `person_4`, `person_5`. This will be where output images will be stored. Example: Outputs for person 1 will be found in `output\person_1` folder.
+7. If you wish to see the results of the algorithm, delete the contents of the `cam_output/person` folders. Currently it contains the results of the previous run.
 
-## Utilisation
+## Usage
 
 Run the code with `python main.py`
