@@ -1,9 +1,9 @@
 import cv2 as cv
 
 # Number of bins for each channel
-b_bins = 8
+b_bins = 16
 g_bins = 8
-r_bins = 8
+r_bins = 4
 
 # Range for each channel
 b_range = [0, 256]

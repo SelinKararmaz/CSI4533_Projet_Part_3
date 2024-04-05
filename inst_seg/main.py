@@ -7,12 +7,12 @@ import torch
 
 
     
-def find_people(images, output_text_file_path):
+def find_people():
     source_path_dir = "../images/cam0"
     output_path_dir = "examples/output"
     images = os.listdir(source_path_dir)
     output_text_file_path = output_path_dir + "/output.txt"
-    for index in range(1,6):
+    for index in range(2,6):
         image = cv.imread("input/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
@@ -24,7 +24,7 @@ def find_people(images, output_text_file_path):
         #25 - first person
         #0 - third person
         #20 - fourth person
-        for image_name in images[20:]:
+        for image_name in images[:]:
             #print("image")
             # Charger le modèle et appliquer les transformations à l'image
             seg_model, transforms = model.get_model()
@@ -38,9 +38,6 @@ def find_people(images, output_text_file_path):
             # Effectuer l'inférence sur l'image transformée sans calculer les gradients
             with torch.no_grad():
                 output = seg_model([transformed_img])
-
-            # Traiter le résultat de l'inférence
-           # save_masks(output,image,image_name[:-4])
             
             masked = apply_saved_mask(image,1000,image_name[:-4])
             result = masked[0]
@@ -72,7 +69,7 @@ def find_people(images, output_text_file_path):
                     if(smallest_dif < local_max):
                         smallest_dif = local_max
                         closest_person = person_in_image
-      
+            print(smallest_dif)
             if(smallest_dif < 0.91): 
                 continue
         
@@ -109,7 +106,7 @@ def save_numpy():
 if __name__ == "__main__":
 
     # Définir les répertoires source et de sortie, et le nom de l'image
-    save_numpy()
+    #save_numpy()
 
     
-    #find_people(images, output_text_file_path)
+    find_people()
