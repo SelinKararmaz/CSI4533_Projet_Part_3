@@ -67,7 +67,7 @@ def find_people(cam):
                         smallest_dif = local_max
                         closest_person = person_in_image
                         
-            print(smallest_dif)
+            #print(smallest_dif)
          
             thresholds = {
                 1: 0.92,
