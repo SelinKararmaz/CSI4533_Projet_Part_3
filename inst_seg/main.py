@@ -9,13 +9,14 @@ import torch
 if __name__ == "__main__":
 
     # Définir les répertoires source et de sortie, et le nom de l'image
-    source_path_dir = "../images/cam0"
+    source_path_dir = "images/images/cam0"
     output_path_dir = "examples/output"
     images = os.listdir(source_path_dir)
     output_text_file_path = output_path_dir + "/output.txt"
 
 
     for index in range(1,6):
+        print("[+] Now identifying person " + str(index) + "...")
         image = cv.imread("input/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
@@ -79,9 +80,11 @@ if __name__ == "__main__":
         
             bounding_box_image = get_bounding_box(closest_person, image)
             
-            output_folder_path = "../output/person_" + str(index) +"/"+image_name
+            output_folder_path = "output/person_" + str(index) +"/"+image_name
             
             bounding_box_image.save(output_folder_path)
+            
+        print("[+] Person " + str(index) + " identification done." )
 
         
 
