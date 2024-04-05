@@ -17,7 +17,7 @@ def find_people(cam):
     source_path_dir = SOURCE_PATH + cam
     images = os.listdir(source_path_dir)
 
-    for index in range(4,5):
+    for index in range(1,6):
         image = cv.imread("input/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
@@ -68,13 +68,16 @@ def find_people(cam):
                         closest_person = person_in_image
                         
             print(smallest_dif)
+         
+            thresholds = {
+                1: 0.92,
+                2: 0.992,
+                3: 0.92,
+                4: 0.50,
+                5: 0.98
+            }
             
-            correl_threshold = 0.91
-            
-            if (i == 4):
-                correl_threshold = 0.50
-            
-            if(smallest_dif < correl_threshold): 
+            if(smallest_dif < thresholds[index]): 
                 continue
         
             bounding_box_image = get_bounding_box(closest_person, image)
