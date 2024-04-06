@@ -36,3 +36,4 @@ Follow these simple steps to get your local copy up and running.
 ## Usage
 
 Run the code with `python main.py`
+Note about thresholds: If you wish to see all the 831 images for each person, replace all threshold values by zero.
