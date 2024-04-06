@@ -25,7 +25,7 @@ def find_people(cam, thresholds):
         person_full = get_rgb_histogram(image)
         person_half = get_rgb_histogram(image_half)
         
-        print("Now identifying person " + str(index))
+        print(" [+] Now identifying person " + str(index))
 
         #750 - second person
         #25 - first person
@@ -78,7 +78,7 @@ def find_people(cam, thresholds):
             
             bounding_box_image.save(output_folder_path)
         
-        print("Done identifying person " + str(index))
+        print(" [+] Done identifying person " + str(index))
 
 def save_numpy(cam):
     """
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     thresholds_0 = {
         1: 0.92,
         2: 0.992,
-        3: 0.92,
+        3: 0.91,
         4: 0.70,
         5: 0.98
     }
@@ -126,9 +126,9 @@ if __name__ == "__main__":
     }
             
     # Identify people for cam 0
-    print("Processing cam 0")
+    print(" =========== Processing cam 0 =========== ")
     find_people("cam0", thresholds_0)
     
     # Identify people for cam 1
-    print("Processing cam 1")
+    print(" =========== Processing cam 1 =========== ")
     find_people("cam1", thresholds_1)
