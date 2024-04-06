@@ -17,7 +17,7 @@ def find_people(cam, thresholds):
     source_path_dir = SOURCE_PATH + cam
     images = os.listdir(source_path_dir)
 
-    for index in range(1,6):
+    for index in range(2,6):
         image = cv.imread("input/person_" + str(index) + ".png")
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         image_half = crop_image_half(image)
@@ -119,15 +119,15 @@ if __name__ == "__main__":
     }
     thresholds_1 = {
         1: 0.92,
-        2: 0.9935,
+        2: 0.993,
         3: 0.88,
         4: 0.65,
         5: 0.977
     }
             
     # Identify people for cam 0
-    print(" =========== Processing cam 0 =========== ")
-    find_people("cam0", thresholds_0)
+    #print(" =========== Processing cam 0 =========== ")
+    #find_people("cam0", thresholds_0)
     
     # Identify people for cam 1
     print(" =========== Processing cam 1 =========== ")
